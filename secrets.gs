@@ -2,7 +2,7 @@
  * @OnlyCurrentDoc
  */
 
-// This file is supposed to keep service account secrets, and is excluded when syncing to/from github
+// This file is supposed to keep service account secrets, and is excluded in GasHub when I sync to/from github
 
 /**
  * Most recent key used here, so it only has access to Gmail.
