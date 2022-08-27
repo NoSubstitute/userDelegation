@@ -14,7 +14,6 @@
  * 
  * Delete
  * https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete
- * 
  */
 
 function onOpen() {
