@@ -3,17 +3,18 @@
  */
 
 /**
- * This process works and gives relevant feedback to the user, but I'm also not validating the error messages :-/
- * Started validating the error messages and everything broke. However, I think on my last debugging session with RS I figured it out.
+ * This process works and gives relevant feedback to the user when the process fails.
+ * I have disabled all logging to console, but keeping it in the code, for easy debugging in the future.
  */
+
 function listGmailDelegate() {
   // Get User/Operator Info
   var userEmail = Session.getActiveUser().getEmail();
   // Get the current spreadsheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // Set the Users sheet as the sheet we're working in
-  var sheet = ss.getSheetByName("Manage"); // For testing using the line below to get less errors content in the log
-  // var sheet = ss.getSheetByName("ManageList");
+  var sheet = ss.getSheetByName("Manage");
+  // var sheet = ss.getSheetByName("ManageList"); // For dev testing I use this sheet with less users to get less error content in the log
   // Log actions to the Log sheet
   var logsheet = ss.getSheetByName('Log');
   // List delegates to the Delegates sheet

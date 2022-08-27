@@ -2,6 +2,11 @@
  * @OnlyCurrentDoc
  */
 
+/**
+ * This process works and gives relevant feedback to the user when the process fails.
+ * I have disabled all logging to console, but keeping it in the code, for easy debugging in the future.
+ */
+
 function deleteGmailDelegate() {
   // Get User/Operator Info
   var userEmail = Session.getActiveUser().getEmail();
