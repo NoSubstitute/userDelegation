@@ -3,7 +3,8 @@
  */
 
 /**
- * This is what I'm doing.
+ * This is the menu for the userDelegation script.
+ * 
  * Pull Accounts (user's emails) from the Sheet column A, and List their delegates, or Add/Delete delegates, using delegates in columns C & D.
  * 
  * List
@@ -28,8 +29,11 @@ function onOpen() {
     .addToUi();
 }
 
-// I don't know how to use this properly, yet, so not calling it anywhere, yet.
-function logout() {
-  var service = getListDelegatesService_()
-  service.reset();
-}
+/**
+ * I don't know how to use this properly, yet, so not calling it anywhere, yet.
+ * It's supposed to make it posible to clear the Properties stored by the three services.
+ */
+// function logout() {
+//   var service = getListDelegatesService_()
+//   service.reset();
+// }
