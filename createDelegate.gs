@@ -1,25 +1,14 @@
 /**
- * This is what I really want to do.
- * Pull info from the Sheet, and Add, Delete or Show delegates, using delegatees in columns C & D.
- * 
- * List
- * https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/list
- * 
- * Create
- * https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/create
- * 
- * Delete
- * https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/delete
- * 
+ * @OnlyCurrentDoc
  */
 
-function addDelegate() {
+function createGmailDelegate() {
   // Get User/Operator Info
-  var userEmail = Session.getActiveUser().getEmail()
+  var userEmail = Session.getActiveUser().getEmail();
   // Get the current spreadsheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // Set the Users sheet as the sheet we're working in
-  var sheet = ss.getSheetByName("Delegated");
+  var sheet = ss.getSheetByName("Manage");
   // Log actions to the Log sheet
   var logsheet = ss.getSheetByName('Log')
   // Get all data from the second row to the last row with data, and the last column with data
@@ -27,54 +16,83 @@ function addDelegate() {
   var lastcolumn = sheet.getLastColumn();
   var range = sheet.getRange(2, 1, lastrow - 1, lastcolumn);
   var list = range.getValues();
-  for (var i = 0; i < list.length; i++) {
+  for (let i = 0; i < list.length; i++) {
     // Grab username from the first column (0), then the rest from adjoing columns and set necessary variables
-    var email = list[i][0].toString();
-    Logger.log(email);
+    var boxEmail = list[i][0].toString();
     var delegatee = list[i][2].toString();
-    Logger.log(delegatee);
     // For each line, try to update the user with given data, and log the result.
     try {
-
-/**
- * None of the syntaxes below works.
- * Obviously I can't read the API documentation correctly...
- * 
- * This is what the IDE says the syntax should be, but if I use it like that it's syntax error.
- * Gmail.Users.Settings.Delegates.create(resource: Gmail_v1.Gmail.V1.Schema.Delegate, userId: string): Gmail_v1.Gmail.V1.Schema.Delegate
- * 
- * I then changed it a little.
- * Gmail.Users.Settings.Delegates.create({resource: Gmail_v1.Gmail.V1.Schema.Delegate, userId: delegatee},email);
- * Gives error: ReferenceError: Gmail_v1 is not defined
- * 
- * So then I started cutting some words from the suggested syntax, to try and get something going.
- * Gmail.Users.Settings.Delegates.create({userId: delegatee}, "me");
- * Gives error "Access restricted to service accounts that have been delegated domain-wide authority"
- * 
- * Both these seem to fail for the same reason. (Found separate references to userId and delegateEmail when I googled.)
- * Gmail.Users.Settings.Delegates.create({"delegateEmail": delegatee}, email);
- * Gmail.Users.Settings.Delegates.create({userId: delegatee}, email);
- * Gives error: API call to gmail.users.settings.delegates.create failed with error: Delegation denied for admin.ns@no-substitute.net
- *  
- * Perhaps it needs to use a REST call instead, with oauth and stuff, which I don't know how to do.
- * 
- * This is what the IDE syntax text says
- * "Lists the delegates for the specified account. This method is only available to service account clients that have been delegated domain-wide authority."
- * 
- * https://developers.google.com/gmail/api/reference/rest#rest-resource:-v1.users.settings.delegates
- */
-      // NONE OF THESE ACTUALLY WORK!
-      // Gmail.Users.Settings.Delegates.create({userId: delegatee}, "me");
-      // Gmail.Users.Settings.Delegates.create({userId: delegatee}, email);
-      // Gmail.Users.Settings.Delegates.create({"delegateEmail": delegatee}, email);
-
-      logsheet.appendRow([new Date(), userEmail, "Account: " + email + " delegated to " + delegatee]);
-
-      // If the update fails for some reason, log the error
+      Logger.log("Trying to let " + delegatee + " read " + boxEmail);
+      // Check to see if userEmail has service account access to boxEmail
+      var service = getCreateDelegationService_(boxEmail);
+      if (service.hasAccess()) {
+        // Prepare the data to be included in the UrlFetccApp call
+        var payload = {
+          "delegateEmail": delegatee,
+          "verificationStatus": "accepted"
+        }
+        var options = {
+          "method": "POST",
+          "contentType": "application/json",
+          "muteHttpExceptions": true,
+          "headers": {
+            "Authorization": 'Bearer ' + service.getAccessToken()
+          },
+          "payload": JSON.stringify(payload)
+        };
+        var url = 'https://www.googleapis.com/gmail/v1/users/' + boxEmail +
+          '/settings/delegates';
+        // Run the actual API call by fetching a URL with the necessary information included
+        var response = UrlFetchApp.fetch(url, options);
+        // var json = response.getContentText();
+        // This logger would show the real response from the API call
+        // Logger.log(json);
+        Logger.log("API Response: " + JSON.stringify(JSON.parse(response)));
+        Logger.log("Tried to let " + delegatee + " read " + boxEmail);
+        logsheet.appendRow([new Date(), userEmail, "ATTEMPTED DELEGATION - Tried to delegate " + boxEmail + " to " + delegatee]);
+        var checkResponse = JSON.stringify(JSON.parse(response));
+        var acceptedStatus = "accepted";
+        var alreadyExists = "ALREADY_EXISTS";
+        if (checkResponse.includes(acceptedStatus)) {
+          Logger.log("Delegated " + boxEmail + " to " + delegatee);
+          // logsheet.appendRow([new Date(), userEmail, "SUCCESSFUL DELEGATION - Delegated " + boxEmail + " to " + delegatee]);
+        } else if (checkResponse.includes(alreadyExists)) {
+          Logger.log(delegatee + " is already a delegate of " + boxEmail);
+          // logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - " + delegatee + " is already a delegate of " + boxEmail]);
+        } else {
+          Logger.log("Failed to let " + delegatee + " read " + boxEmail);
+          // logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - Failed to delegate " + boxEmail + " to " + delegatee]);
+        }
+      } else {
+        Logger.log("FAIL else - " + boxEmail + "," + delegatee + ", " + service.getLastError());
+        // logsheet.appendRow([new Date(), userEmail, "FAIL - " + boxEmail + " or " + delegatee + " is invalid - check spelling"]);
+      }
+      // If the create fails for some reason, log the error
     } catch (err) {
-      logsheet.appendRow([email, err]);
-      Logger.log(err);
+      Logger.log("FAIL err - " + boxEmail + "," + delegatee + ", " + err);
+      // logsheet.appendRow([new Date(), userEmail, "FAIL - " + err]);
     }
   }
   SpreadsheetApp.flush();
+}
+
+/**
+ * Do I really need three separate services, just because I have three different actions?
+ * Create, Delete & List
+ */
+
+function getCreateDelegationService_(boxEmail) {
+  return OAuth2.createService('Gmail:' + boxEmail)
+    // Set the endpoint URL.
+    .setTokenUrl('https://oauth2.googleapis.com/token')
+    // Set the private key and issuer.
+    .setPrivateKey(PRIVATE_KEY)
+    .setIssuer(CLIENT_EMAIL)
+    // Set the name of the user to impersonate.
+    .setSubject(boxEmail)
+    // Set the property store where authorized tokens should be persisted.
+    .setPropertyStore(PropertiesService.getScriptProperties())
+    // Set the scope. This must match one of the scopes configured during the
+    // setup of domain-wide delegation.
+    .setScope(['https://www.googleapis.com/auth/gmail.settings.basic', 'https://www.googleapis.com/auth/gmail.settings.sharing']);
 }
