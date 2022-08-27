@@ -12,11 +12,12 @@ function listGmailDelegate() {
   // Get the current spreadsheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // Set the Users sheet as the sheet we're working in
-  // var sheet = ss.getSheetByName("Manage"); // For testing using the line below to get less errors content in the log
-  var sheet = ss.getSheetByName("ManageList");
+  var sheet = ss.getSheetByName("Manage"); // For testing using the line below to get less errors content in the log
+  // var sheet = ss.getSheetByName("ManageList");
   // Log actions to the Log sheet
-  var logsheet = ss.getSheetByName('Log')
-  var delegatessheet = ss.getSheetByName('Delegated')
+  var logsheet = ss.getSheetByName('Log');
+  // List delegates to the Delegates sheet
+  var delegatessheet = ss.getSheetByName('Delegated');
   // Get all data from the second row to the last row with data, and the last column with data
   var lastrow = sheet.getLastRow();
   var lastcolumn = sheet.getLastColumn();
@@ -27,7 +28,7 @@ function listGmailDelegate() {
     var boxEmail = list[i][0].toString();
     // For each line, try to list the user with given data, and log the result
     try {
-      Logger.log("Trying to list delegates for " + boxEmail);
+      // Logger.log("Trying to list delegates for " + boxEmail);
       // Check to see if userEmail has service account access to boxEmail
       // If not, go straight to else to see why, or to catch if it is an account without delegates
       var serviceList = getListDelegationService_(boxEmail);
@@ -47,7 +48,7 @@ function listGmailDelegate() {
         var response = UrlFetchApp.fetch(url, options);
         // This logger would show the real response from the API call
         // Logger.log(response);
-        Logger.log("API Response: " + JSON.stringify(JSON.parse(response)));
+        // Logger.log("API Response: " + JSON.stringify(JSON.parse(response)));
         var delegateList = JSON.parse(response)
         // For each of the delegates list the boxEmail and delegate
         for (let j = 0; j < delegateList.delegates.length; j++) {
@@ -59,7 +60,7 @@ function listGmailDelegate() {
         }
       } else {
         // Show the error message from the API
-        Logger.log("FAIL else - " + serviceList.getLastError());
+        // Logger.log("FAIL else - " + serviceList.getLastError());
         // Convert error message to a string
         var checkElseError = serviceList.getLastError();
         var checkElse = checkElseError.toString();
@@ -67,14 +68,15 @@ function listGmailDelegate() {
         var errorInvalidGrant = "invalid_grant";
         // Check error message against the two known errors errorInvalidRequest & errorInvalidGrant and react accordingly
         if (checkElse.includes(errorInvalidRequest)) {
-          Logger.log("Error contains invalid request");
+          // Logger.log("Error contains invalid request");
           logsheet.appendRow([new Date(), userEmail, "FAILED LIST Request - Failed to list delegates of " + boxEmail + " - check spelling"]);
         } else if (checkElse.includes(errorInvalidGrant)) {
-          Logger.log("Error contains invalid grant");
+          // Logger.log("Error contains invalid grant");
           logsheet.appendRow([new Date(), userEmail, "FAILED LIST Grant - Failed to list delegates of " + boxEmail + " - check spelling"]);
         }
         else {
-          Logger.log("Neither error message matches. No clue what's wrong. Potentially add more else if loops here.");
+          // Logger.log("Neither error message matches. No clue what's wrong. Potentially add more else if loops here.");
+          logsheet.appendRow([new Date(), userEmail, "FAILED LIST - Failed to list delegates of " + boxEmail + " - reason unknown"]);
         }
       }
       // If the list fails for some reason, log the error
@@ -84,7 +86,7 @@ function listGmailDelegate() {
       }
       else if (err instanceof SyntaxError) {
         // Show the error message from the API
-        Logger.log("FAIL err - " + err);
+        // Logger.log("FAIL err - " + err);
         // Logger.log(err.name);
         // Logger.log(err.message);
         // Since I have verified that SyntaxError always means account is not delegated, print that in the log
@@ -107,7 +109,7 @@ function getListDelegationService_(boxEmail) {
   return OAuth2.createService('Gmail:' + boxEmail)
     // Set the endpoint URL.
     .setTokenUrl('https://oauth2.googleapis.com/token')
-    // Set the private key and issuer. Values taken from the secrets.gs.
+    // Set the private key and issuer. Values taken from secrets.gs.
     .setPrivateKey(PRIVATE_KEY)
     .setIssuer(CLIENT_EMAIL)
     // Set the name of the user to impersonate.
