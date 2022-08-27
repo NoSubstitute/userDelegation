@@ -4,7 +4,7 @@
 
 /**
  * This process works and gives relevant feedback to the user, but I'm also not validating the error messages :-/
- * Started validating the error messages and everything broke
+ * Started validating the error messages and everything broke. However, I think on my last debugging session with RS I figured it out.
  */
 function listGmailDelegate() {
   // Get User/Operator Info
@@ -80,7 +80,7 @@ function listGmailDelegate() {
       // If the list fails for some reason, log the error
     } catch (err) {
       if (!(err instanceof SyntaxError)) {
-        throw err; // rethrow (don't know how to deal with this error)
+        throw err; // rethrow (I don't know how to deal with unknown error types, but there also shouldn't be any.)
       }
       else if (err instanceof SyntaxError) {
         // Show the error message from the API
@@ -91,7 +91,7 @@ function listGmailDelegate() {
         logsheet.appendRow([new Date(), userEmail, "NOT DELEGATED - " + boxEmail]);
       }
     } finally {
-      // Logger.log("This runs regardless, and is only good for debugging, to see if the code gets this far")
+      // Logger.log("This runs regardless, and is only good for debugging, to see if the code gets this far");
     }
   }
   SpreadsheetApp.flush();
@@ -100,20 +100,21 @@ function listGmailDelegate() {
 /**
  * Do I really need three separate services, just because I have three different actions?
  * Create, Delete & List
+ * I don't know, so keeping them all for now.
  */
 
 function getListDelegationService_(boxEmail) {
   return OAuth2.createService('Gmail:' + boxEmail)
     // Set the endpoint URL.
     .setTokenUrl('https://oauth2.googleapis.com/token')
-    // Set the private key and issuer.
+    // Set the private key and issuer. Values taken from the secrets.gs.
     .setPrivateKey(PRIVATE_KEY)
     .setIssuer(CLIENT_EMAIL)
     // Set the name of the user to impersonate.
     .setSubject(boxEmail)
     // Set the property store where authorized tokens should be persisted.
     .setPropertyStore(PropertiesService.getScriptProperties())
-    // Set the scope. This must match one of the scopes configured during the
+    // Set the scope. This must match the scopes configured during the
     // setup of domain-wide delegation.
     .setScope(['https://www.googleapis.com/auth/gmail.settings.basic', 'https://www.googleapis.com/auth/gmail.settings.sharing']);
 }

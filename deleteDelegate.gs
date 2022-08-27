@@ -52,17 +52,17 @@ function deleteGmailDelegate() {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           Logger.log("responsecode: " + responsecode);
           Logger.log("Deleted delegate" + delegatee + " from " + boxEmail);
-          // logsheet.appendRow([new Date(), userEmail, "SUCCESSFUL DELETION - Deleted " + delegatee + " from " + boxEmail]);
+          logsheet.appendRow([new Date(), userEmail, "SUCCESSFUL DELETION - Deleted " + delegatee + " from " + boxEmail]);
         } else if (responsecode == "404") {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           Logger.log("responsecode: " + responsecode);
           Logger.log("Invalid delegate " + delegatee);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
         } else {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           Logger.log("responsecode: " + responsecode);
           Logger.log("Something else wrong " + delegatee);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
         }
       } else {
         Logger.log("FAIL else - " + serviceDelete.getLastError());
@@ -76,11 +76,11 @@ function deleteGmailDelegate() {
         if (checkElse.includes(errorInvalidRequest)) {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           Logger.log("Failed to delete delegate - check spelling of " + delegatee);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - check spelling of delegate"]);
         } else if (checkElse.includes(errorInvalidGrant)) {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           Logger.log("Failed to delete delegate - check spelling of " + boxEmail);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Account " + boxEmail + " is invalid - check spelling"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Account " + boxEmail + " is invalid - check spelling"]);
         }
         else {
           Logger.log("Doesn't match either error message")
@@ -89,7 +89,7 @@ function deleteGmailDelegate() {
       // If the delete fails for some reason, log the error
     } catch (err) {
       if (!(err instanceof SyntaxError)) {
-        throw err; // rethrow (don't know how to deal with this error)
+        throw err; // rethrow (I don't know how to deal with this error, even if it rarely happens.)
       }
       // else if (err instanceof SyntaxError) {
       else {
@@ -110,21 +110,21 @@ function deleteGmailDelegate() {
           // Logger.log(checkErrMessage);
           Logger.log(checkErr);
           Logger.log("Failed to find delegate account - check spelling of " + delegatee);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Delegate " + delegatee + " is invalid - check spelling"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Delegate " + delegatee + " is invalid - check spelling"]);
         } else if (checkErr.includes(errorUnexpectedTokenE)) {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           // Logger.log(err);
           // Logger.log(checkErrMessage);
           Logger.log(checkErr);
           Logger.log("Failed - other reason?");
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - some other reason?"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - some other reason?"]);
         } else if (checkErr.includes(errorUnexpectedToken)) {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           // Logger.log(err);
           // Logger.log(checkErrMessage);
           Logger.log(checkErr);
           Logger.log("Failed - no delegate?");
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - Did you supply a delegate to remove?"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Failed to delete " + delegatee + " from " + boxEmail + " - Did you supply a delegate to remove?"]);
         } else {
           Logger.log("Tried to remove " + delegatee + " from " + boxEmail);
           // Logger.log(err);
@@ -132,7 +132,7 @@ function deleteGmailDelegate() {
           Logger.log(checkErr);
           // Logger.log("Failed to find inbox account - check spelling of " + boxEmail);
           Logger.log("My IF INCLUDES are not working, don't know why");
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Account " + boxEmail + " is invalid - check spelling"]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELETION - Account " + boxEmail + " is invalid - check spelling"]);
         }
       }
     } finally {
@@ -145,6 +145,7 @@ function deleteGmailDelegate() {
 /**
  * Do I really need three separate services, just because I have three different actions?
  * Create, Delete & List
+ * I don't know, so keeping them all for now.
  */
 
 function getDeleteDelegationService_(boxEmail) {

@@ -55,22 +55,22 @@ function createGmailDelegate() {
         var alreadyExists = "ALREADY_EXISTS";
         if (checkResponse.includes(acceptedStatus)) {
           Logger.log("Delegated " + boxEmail + " to " + delegatee);
-          // logsheet.appendRow([new Date(), userEmail, "SUCCESSFUL DELEGATION - Delegated " + boxEmail + " to " + delegatee]);
+          logsheet.appendRow([new Date(), userEmail, "SUCCESSFUL DELEGATION - Delegated " + boxEmail + " to " + delegatee]);
         } else if (checkResponse.includes(alreadyExists)) {
           Logger.log(delegatee + " is already a delegate of " + boxEmail);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - " + delegatee + " is already a delegate of " + boxEmail]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - " + delegatee + " is already a delegate of " + boxEmail]);
         } else {
           Logger.log("Failed to let " + delegatee + " read " + boxEmail);
-          // logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - Failed to delegate " + boxEmail + " to " + delegatee]);
+          logsheet.appendRow([new Date(), userEmail, "FAILED DELEGATION - Failed to delegate " + boxEmail + " to " + delegatee]);
         }
       } else {
         Logger.log("FAIL else - " + boxEmail + "," + delegatee + ", " + service.getLastError());
-        // logsheet.appendRow([new Date(), userEmail, "FAIL - " + boxEmail + " or " + delegatee + " is invalid - check spelling"]);
+        logsheet.appendRow([new Date(), userEmail, "FAIL - " + boxEmail + " or " + delegatee + " is invalid - check spelling"]);
       }
       // If the create fails for some reason, log the error
     } catch (err) {
       Logger.log("FAIL err - " + boxEmail + "," + delegatee + ", " + err);
-      // logsheet.appendRow([new Date(), userEmail, "FAIL - " + err]);
+      logsheet.appendRow([new Date(), userEmail, "FAIL - " + err]);
     }
   }
   SpreadsheetApp.flush();
@@ -79,6 +79,7 @@ function createGmailDelegate() {
 /**
  * Do I really need three separate services, just because I have three different actions?
  * Create, Delete & List
+ * I don't know, so keeping them all for now.
  */
 
 function getCreateDelegationService_(boxEmail) {
