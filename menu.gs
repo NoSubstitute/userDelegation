@@ -4,7 +4,7 @@
 
 /**
  * This is what I'm doing.
- * Pull userEmails from the Sheet column A, and Add, Delete or List delegates, using delegatees in columns C & D.
+ * Pull Accounts (user's emails) from the Sheet column A, and List their delegates, or Add/Delete delegates, using delegates in columns C & D.
  * 
  * List
  * https://developers.google.com/gmail/api/reference/rest/v1/users.settings.delegates/list
