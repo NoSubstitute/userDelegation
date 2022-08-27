@@ -21,11 +21,11 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
   // Or DocumentApp or FormApp.
   ui.createMenu('userDelegation')
-    .addItem('List delegatee', 'listGmailDelegate')
+    .addItem('List delegates', 'listGmailDelegate')
     .addSeparator()
-    .addItem('Add delegatee', 'createGmailDelegate')
+    .addItem('Add delegates', 'createGmailDelegate')
     .addSeparator()
-    .addItem('Delete delegatee', 'deleteGmailDelegate')
+    .addItem('Delete delegates', 'deleteGmailDelegate')
     .addToUi();
 }
 
