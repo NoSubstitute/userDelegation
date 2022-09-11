@@ -1,4 +1,4 @@
-## WORK IN PROGRESS! Code works, but secrets.gs is lacking secrets.
+## WORK IN PROGRESS! Code works, but wiki isn't complete, still lacking some instructions on how to use it.
 
 # userDelegation
 Pull info from the Sheet, and Add, Delete or List delegates
