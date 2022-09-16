@@ -13,9 +13,6 @@ The result of each action will be added to the sheet _Log_.<br>
 When using _List_ and _Add_, the delegated accounts will also be listed in the sheet _Delegated_.<br>
 The _Delete_ action only displays its result in _Log_.
 
-The column _Delegates_ on sheet _Manage_ is auto-populated from the list of delegates in the sheet _Delegated_.<br>
-When you add more accounts in column A, you will have to copy the formula in B to those new rows.
-
 ## How to make it work - Yes, this is absolutely necessary to do first.
 secrets.gs needs secrets from a service account with domain wide access to the necessary scopes.
 
