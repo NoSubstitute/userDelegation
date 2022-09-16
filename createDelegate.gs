@@ -26,7 +26,7 @@ function createGmailDelegate() {
   for (let i = 0; i < list.length; i++) {
     // Grab username from the first column (0), then the rest from adjoing columns and set necessary variables
     var boxEmail = list[i][0].toString();
-    var delegate = list[i][2].toString();
+    var delegate = list[i][1].toString();
     // For each line, try to update the user with given data, and log the result.
     try {
       // Logger.log("Trying to let " + delegate + " read " + boxEmail);
