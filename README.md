@@ -1,6 +1,9 @@
 # userDelegation
 Pull info from the Sheet, and Add, Delete or List delegates
 
+## If you instead want to manage this with a [web app, go here](https://github.com/NoSubstitute/userDelegationWebApp).
+
+## Quickest way to get going with userDelegation in a Sheet.
 [Copy template](https://docs.google.com/spreadsheets/d/1DQM3g39_C1y1cKvd7E7NtjBtJu_qFgai8X1GYlU3o6Q/copy) to get Sheet with Google Apps Script.
 
 Use the _userDelegation_ script menu to list, add and delete delegates.
@@ -18,7 +21,7 @@ secrets.gs needs secrets from a service account with domain wide access to the n
 
 [Read the wiki](https://github.com/NoSubstitute/userDelegation/wiki) how you set that up.
 
-The secrets.gs in the repo will never have any secrets, as that would give any user acess to my domain. Which is why you also shouldn't post your secrets publically, and only give access to this sheet and script to trusted admins. Even if that's a given, it never hurts to remind people. :-)
+The secrets.gs in the repo will never have any secrets, as that would give any user acess to my domain. Which is why you also shouldn't post your secrets publicly, and only give access to this sheet and script to trusted admins. Even if that's a given, it never hurts to remind people. :-)
 
 [PRIVACY POLICY](https://tools.no-substitute.com/pp)
 
