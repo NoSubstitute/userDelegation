@@ -1,7 +1,7 @@
 # userDelegation
 Pull info from the Sheet, and Add, Delete or List delegates
 
-## If you instead want to manage this with a [web app, go here](https://github.com/NoSubstitute/userDelegationWebApp).
+## If you instead want to manage this with a [user & password protected web app, go here](https://github.com/NoSubstitute/userDelegationWebApp).
 
 ## Quickest way to get going with userDelegation in a Sheet.
 [Copy template](https://docs.google.com/spreadsheets/d/1DQM3g39_C1y1cKvd7E7NtjBtJu_qFgai8X1GYlU3o6Q/copy) to get Sheet with Google Apps Script.
