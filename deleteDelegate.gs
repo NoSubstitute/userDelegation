@@ -131,6 +131,8 @@ function deleteGmailDelegate() {
       }
     } finally {
       // Logger.log("This runs regardless, and is only good for debugging, to see if the code gets this far")
+      // Now the script cleans up the properties after each run, so as to avoid Properties Storage Quota errors
+      PropertiesService.getScriptProperties().deleteProperty("oauth2.Gmail:"+boxEmail)
     }
   }
   SpreadsheetApp.flush();
