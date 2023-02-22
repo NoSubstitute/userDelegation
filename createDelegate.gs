@@ -109,6 +109,9 @@ function createGmailDelegate() {
     } catch (err) {
       // Logger.log("FAIL err - " + boxEmail + "," + delegate + ", " + err);
       logsheet.appendRow([new Date(), userEmail, "FAIL - " + err]);
+    } finally {
+    // Now the script cleans up the properties after each run, so as to avoid Properties Storage Quota errors
+    PropertiesService.getScriptProperties().deleteProperty("oauth2.Gmail:"+boxEmail)
     }
   }
   SpreadsheetApp.flush();
